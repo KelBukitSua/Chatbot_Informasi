@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot Kelurahan Bukit Sua</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="chatbot">
+  <div class="chat-header">Selamat Datang di Aplikasi Chatbot Informasi Kelurahan Bukit Sua</div>
+  <div class="chat-body" id="chatBody"></div>
+
+  <div class="quick-replies">
+    <button onclick="sendQuick('Syarat SKU')">Syarat Surat Ket Usaha</button>
+	<button onclick="sendQuick('Syarat SKD')">Syarat Surat Ket Domisili</button>
+	<button onclick="sendQuick('Syarat SKP')">Syarat Surat Ket Pindah</button>
+	<button onclick="sendQuick('Syarat SKTM')">Syarat Surat Ket Tidak Mampu</button>
+	<button onclick="sendQuick('Syarat SKBK')">Syarat Surat Ket Berkelakuan Baik</button>
+	<button onclick="sendQuick('Syarat SKL')">Syarat Surat Ket Lahir</button>
+	<button onclick="sendQuick('Syarat SKM')">Syarat Surat Ket Kematian</button>
+	<button onclick="sendQuick('Syarat SKBNikah')">Syarat Surat Ket Belum Nikah</button>
+	<button onclick="sendQuick('Syarat SKNikah')">Syarat Surat Ket Untuk Nikah</button>
+	<button onclick="sendQuick('Syarat SKWaris')">Syarat Surat Ket Ahli Waris</button>
+
+  </div>
+    <div class="quick-replies2">
+    <button onclick="sendQuick('Nama Lurah')">Nama Lurah</button>
+    <button onclick="sendQuick('Alamat Kelurahan')">Alamat</button>
+    <button onclick="sendQuick('Jam Pelayanan')">Jam Pelayanan</button>
+    <button onclick="sendQuick('Kontak WhatsApp')">Kontak WhatsApp</button>
+	<button onclick="sendQuick('Form pengaduan')">Pengaduan(Saran dan Masukan)</button>
+	<button onclick="sendQuick('panduan')">Panduan Penggunaan Chatbot</button>
+  </div>
+
+  <div class="chat-footer">
+    <input type="text" id="userInput" placeholder="Tulis pertanyaan..." onkeypress="if(event.key==='Enter') chat()">
+    <button onclick="chat()">Kirim</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  loadHistory();
+  if(document.getElementById('chatBody').innerHTML.trim() === '') {
+    addMessage('👋 Halo! Saya Asisten Kelurahan Bukit Sua. Ketik pertanyaan atau gunakan tombol cepat di bawah.', 'bot');
+  }
+});
+
+function addMessage(content, sender) {
+  const body = document.getElementById('chatBody');
+  const avatarUrl = sender === 'bot' ? 'avatar-bot.png' : 'avatar-user.png';
+  const msgHTML = `
+    <div class="message-row ${sender}">
+      <img src="${avatarUrl}" class="avatar">
+      <div class="message ${sender}">${content}</div>
+    </div>
+  `;
+  body.insertAdjacentHTML('beforeend', msgHTML);
+  body.scrollTop = body.scrollHeight;
+  saveHistory();
+}
+
+function showTyping() {
+  const body = document.getElementById('chatBody');
+  if (!document.getElementById('typing')) {
+    const typingHTML = `
+      <div class="message-row bot typing" id="typing">
+        <img src="avatar-bot.png" class="avatar">
+        <div class="typing-indicator"><span></span><span></span><span></span></div>
+      </div>
+    `;
+    body.insertAdjacentHTML('beforeend', typingHTML);
+    body.scrollTop = body.scrollHeight;
+  }
+}
+
+function hideTyping() {
+  const typingDiv = document.getElementById('typing');
+  if (typingDiv) typingDiv.remove();
+}
+
+function chat() {
+  const input = document.getElementById('userInput');
+  const msg = input.value.trim();
+  if (msg === '') return;
+  addMessage(msg, 'user');
+  input.value = '';
+
+  showTyping();
+
+  let reply = getBotReply(msg);
+
+  setTimeout(() => {
+    hideTyping();
+    addMessage(reply, 'bot');
+  }, 700);
+}
+
+function sendQuick(text) {
+  document.getElementById('userInput').value = text;
+  chat();
+}
+
+function getBotReply(msg) {
+  const lower = msg.toLowerCase();
+  if (lower.includes('nama lurah')) {
+    return '👤 Nama Lurah Kelurahan Bukit Sua adalah Ibu Noviani, S.P.';
+  } else if (lower.includes('alamat')) {
+    return '📍 <a href="https://maps.google.com/?q=Bukit+Sua" target="_blank">Jl. Jalan Timpung RT.001 RW.001 Bukit Sua</a>';
+  } else if (lower.includes('jam')) {
+    return '🕐 Pelayanan buka Senin–Jumat, pukul 08.00–15.00 WIB.';
+  } else if (lower.includes('sku')) {
+    return '📄 Syarat SKU:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-sku.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skd')) {
+    return '📄 Syarat SKD:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skp')) {
+    return '📄 Syarat SKP:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('sktm')) {
+    return '📄 Syarat SKTM:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skbk')) {
+    return '📄 Syarat SKBK:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skl')) {
+    return '📄 Syarat SKL:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skm')) {
+    return '📄 Syarat SKM:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skbn')) {
+    return '📄 Syarat SKBNikah:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skn')) {
+    return '📄 Syarat SKNikah:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('skw')) {
+    return '📄 Syarat SKWaris:<br>- KTP (FC 1x)<br>- KK (FC 1x)<br>- Pas Foto 3x4 (2 lembar)<br>- Foto Usaha (1 lembar)<br>- Form SKU (TTD RT)<br><br><a href="form-skd.pdf" target="_blank">📥 Download Form</a>';
+  } else if (lower.includes('kontak')) {
+    return '📞 Hubungi via WhatsApp: <a href="https://wa.me/6282254963703" target="_blank">Klik di sini</a>';
+  } else if (lower.includes('pengaduan')) {
+    return '📄 Pengaduan(Saran dan Masukan): <a href="https://docs.google.com/forms/d/e/1FAIpQLSek5nRdAjOpWnnSmVpQ5ROKHV0-24EWrviuZl5f5Hmg6V9nyA/viewform?usp=sharing&ouid=100149034738123356575" target="_blank">Klik di sini</a>';
+  } else if (lower.includes('panduan')) {
+    return '📄 Panduan pengguna Chatbot: <a href="https://www.youtube.com/shorts/zUVZ4FHCgKs" target="_blank">Klik di sini</a>';
+  } else {
+    return '❓ Maaf, saya belum mengerti. Silakan pilih tombol cepat di bawah.';
+  }
+}
+
+function saveHistory() {
+  localStorage.setItem('chatHistory', document.getElementById('chatBody').innerHTML);
+}
+
+function loadHistory() {
+  const history = localStorage.getItem('chatHistory');
+  if (history) {
+    document.getElementById('chatBody').innerHTML = history;
+  }
+}
+</script>
+
+</body>
+</html>
